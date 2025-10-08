@@ -1,0 +1,90 @@
+﻿@page "/update/{id:guid}"
+@rendermode InteractiveServer
+@using BlazorCRUDWebApp.Models
+@inject BlazorCRUDWebApp.Services.IEmployeeService EmployeeService
+@inject NavigationManager Navigation
+
+
+
+<h3>Обновить данные пользователя</h3>
+
+@if (employee == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <br/>
+    <div class="mb-3">
+        <label for="employeeName" class="form-label">Имя</label>
+        <input type="text" class="form-control" readonly id="employeeName" @bind="employee.Name" />
+    </div>
+
+    <br />
+
+    <div class="mb-3">
+        <label for="inputSelect">Должность</label><br />
+        <InputSelect 
+            id="inputSelect"
+            @bind-Value="employee.Position" 
+            placeholder="Должность" 
+            multiple
+        >
+            @foreach (var pos in positions)
+            {
+                <option value="@pos">@pos</option>
+            }
+        </InputSelect>
+     </div>
+
+    <br />
+
+     <div class="mb-3">
+        <label for="inputNumber">Должность</label><br />
+        <InputNumber @bind-Value="employee.Salary"
+            placeholder = "Зарплата"
+            id="inputNumber"
+            min="10000" 
+            max="1000000" 
+            step="1000"
+        />
+     </div>
+
+    <br />
+
+        <button class="btn btn-secondary" @onclick="Cancel">Отмена</button>
+        <button class="btn btn-primary" @onclick="UpdateEmployee">Сохранить</button>
+
+}
+
+@code {
+    [Parameter]
+    public Guid id { get; set; }
+
+    private Models.Employee employee;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await EmployeeService.GetEmployee(id);
+    }
+
+    private async Task UpdateEmployee()
+    {
+        await EmployeeService.UpdateEmployee(employee.Id, employee.Position,
+                                             employee.Salary);
+
+        Navigation.NavigateTo("/allemployees");
+
+    }
+
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/allemployees");
+    }
+
+
+    List<string> positions = ["Manager", "Vendor", "Clerk", "Whore"];
+    //IEnumerable<double> salaryList = Enumerable.Range(10000, 1000000).Select(x => (double)x);
+
+}

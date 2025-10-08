@@ -1,0 +1,74 @@
+﻿
+
+@page "/add-employee"
+@rendermode InteractiveServer
+@using BlazorCRUDWebApp.Models
+@inject BlazorCRUDWebApp.Services.IEmployeeService service
+@inject NavigationManager Navigation
+
+
+
+<h3>Добавить нового сотрудника</h3>
+
+<div class="mb-3">
+    <label for="Name" class="form-label">Имя</label>
+    <input type="text" class="form-control" id="Name" @bind="newName" />
+</div>
+
+<div class="mb-3">
+    <label for="Gender" class="form-label">Пол</label>
+    <input type="text" class="form-control" id="Gender" @bind="newGender" />
+</div>
+
+<div class="mb-3">
+    <label for="birthYear" class="form-label">Год рождения</label>
+    <input type="int" class="form-control" id="birthYear" @bind="birthdate" />
+</div>
+
+<div class="mb-3">
+    <label for="position" class="form-label">Должность</label>
+    <input type="text" class="form-control" id="position" @bind="newPosition" />
+</div>
+
+<div class="mb-3">
+    <label for="salary" class="form-label">Зарплата</label>
+    <input type="double" class="form-control" id="salary" @bind="newSalary" />
+</div>
+
+
+<button class="btn btn-secondary" @onclick="Cancel">Отмена</button>
+<button class="btn btn-primary" @onclick="InsertEmployee">Сохранение</button>
+
+
+
+@code {
+
+    private string newName;
+    private string newGender;
+    private int birthdate;
+    private string newPosition;
+    private double newSalary;
+
+    private async Task InsertEmployee()
+    {
+        var employee = new Models.Employee
+        {
+            Id = Guid.NewGuid(),
+            Name = newName,
+            Gender = newGender,
+            Birthdate = birthdate,
+            Position = newPosition,
+            Salary = newSalary
+        };
+
+        await service.AddEmployee(employee);
+
+        Navigation.NavigateTo("/allemployees");
+        StateHasChanged();
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/allemployees");
+    }
+}
