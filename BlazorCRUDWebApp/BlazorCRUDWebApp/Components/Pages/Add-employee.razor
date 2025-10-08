@@ -6,35 +6,44 @@
 @inject BlazorCRUDWebApp.Services.IEmployeeService service
 @inject NavigationManager Navigation
 
+@* @using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations; *@
 
 
 <h3>Добавить нового сотрудника</h3>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+ <div style="width: 300px;">
 
 <div class="mb-3">
     <label for="Name" class="form-label">Имя</label>
-    <input type="text" class="form-control" id="Name" @bind="newName" />
+        <InputText type="text" class="form-control" id="Name" @bind-Value="newName" />
 </div>
+
 
 <div class="mb-3">
     <label for="Gender" class="form-label">Пол</label>
-    <input type="text" class="form-control" id="Gender" @bind="newGender" />
+        <InputText type="text" class="form-control" id="Gender" @bind-Value="newGender" />
 </div>
 
 <div class="mb-3">
     <label for="birthYear" class="form-label">Год рождения</label>
-    <input type="int" class="form-control" id="birthYear" @bind="birthdate" />
+        <InputNumber TValue="int" class="form-control" id="birthYear" @bind-Value="birthdate" />
 </div>
 
 <div class="mb-3">
     <label for="position" class="form-label">Должность</label>
-    <input type="text" class="form-control" id="position" @bind="newPosition" />
+        <InputText type="text" class="form-control" id="position" @bind-Value="newPosition" />
 </div>
 
 <div class="mb-3">
     <label for="salary" class="form-label">Зарплата</label>
-    <input type="double" class="form-control" id="salary" @bind="newSalary" />
+        <InputNumber TValue="double" class="form-control" id="salary" @bind-Value="newSalary" />
 </div>
-
+</div>
 
 <button class="btn btn-secondary" @onclick="Cancel">Отмена</button>
 <button class="btn btn-primary" @onclick="InsertEmployee">Сохранение</button>
@@ -43,10 +52,10 @@
 
 @code {
 
-    private string newName;
-    private string newGender;
+    private string newName = String.Empty;
+    private string newGender = String.Empty;
     private int birthdate;
-    private string newPosition;
+    private string newPosition = String.Empty;
     private double newSalary;
 
     private async Task InsertEmployee()

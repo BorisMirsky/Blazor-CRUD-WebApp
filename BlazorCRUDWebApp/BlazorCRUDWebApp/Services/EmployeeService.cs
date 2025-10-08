@@ -45,8 +45,12 @@ namespace BlazorCRUDWebApp.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateEmployee(Guid id, string pos, double sal) //Employee employee)
+        public async Task UpdateEmployee(Guid id, string pos, double sal) 
         {
+
+            //Employee employee = await GetEmployee(id);
+            //employee.Position = pos;
+            //employee.Salary = sal;
             //_context.Entry(employee).State = EntityState.Modified;
             //await _context.SaveChangesAsync();
             await _context.Employees
@@ -54,8 +58,7 @@ namespace BlazorCRUDWebApp.Services
                 .ExecuteUpdateAsync(s => s
                     .SetProperty(o => o.Salary, o => sal)
                     .SetProperty(o => o.Position, o => pos));
-            //await _context.SaveChangesAsync();
-            //return id;
+
         }
 
 

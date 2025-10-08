@@ -14,6 +14,7 @@
 }
 else
 {
+    <div style="width: 300px;">
     <br/>
     <div class="mb-3">
         <label for="employeeName" class="form-label">Имя</label>
@@ -23,12 +24,11 @@ else
     <br />
 
     <div class="mb-3">
-        <label for="inputSelect">Должность</label><br />
+        <label for="inputSelect" class="form-label">Должность</label>
         <InputSelect 
+            class="form-control"
             id="inputSelect"
-            @bind-Value="employee.Position" 
-            placeholder="Должность" 
-            multiple
+            @bind-Value="employee.Position"    
         >
             @foreach (var pos in positions)
             {
@@ -40,15 +40,17 @@ else
     <br />
 
      <div class="mb-3">
-        <label for="inputNumber">Должность</label><br />
-        <InputNumber @bind-Value="employee.Salary"
-            placeholder = "Зарплата"
+        <label for="inputNumber" class="form-label">Зарплата</label>
+        <InputNumber
+            @bind-Value="employee.Salary"
+            class="form-control"
             id="inputNumber"
             min="10000" 
             max="1000000" 
             step="1000"
         />
      </div>
+    </div>
 
     <br />
 
@@ -85,6 +87,7 @@ else
 
 
     List<string> positions = ["Manager", "Vendor", "Clerk", "Whore"];
-    //IEnumerable<double> salaryList = Enumerable.Range(10000, 1000000).Select(x => (double)x);
+    @*  {positions.Insert(0, employee.Position);}   *@
+
 
 }
