@@ -1,34 +1,25 @@
 ﻿@page "/allemployees"
 
-@* @typeparam TItem       *@
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject BlazorCRUDWebApp.Services.IEmployeeService EmployeeService
+@inject IJSRuntime JSRuntime
+@using BlazorCRUDWebApp.Models
+@using BlazorCRUDWebApp.Services
 @inject IJSRuntime JSRuntime
 
 
 <br />
 <br />
 <h3>Все сотрудники</h3>
-
-
-<br />
-<br />
-<br />
-<button class="btn btn-primary" @onclick="OpenAddEmployee">Add New Employee</button>
 <br />
 <br />
 <br />
 
 
-
-@if (employees == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
+<div style="width: 800px;">
+<PaginationComponent TItem="Employee" Items="employees" DefaultPageSize="10">
+    <ChildContentHeader>
         <thead>
             <tr>
                 <th>Имя</th>
@@ -40,41 +31,42 @@ else
                 <th></th>
             </tr>
         </thead>
+    </ChildContentHeader>
+    <ChildContentRow Context="Employee">
         <tbody>
-            @foreach (var employee in employees)
-            {
                 <tr>
-                    <td>@employee.Name</td>
-                    <td>@employee.Gender</td>
-                    <td>@employee.Birthdate</td>
+                    <td>@Employee.Name</td>
+                    <td>@Employee.Gender</td>
+                    <td>@Employee.Birthdate</td>
+                    <td>@Employee.Position</td>
+                    <td>@Employee.Salary</td>
                     <td>
-                        @employee.Position
-                    </td>
-                    <td>@employee.Salary</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" @onclick="() => NavigateToUpdate(employee.Id)">
+                        <button class="btn btn-warning btn-sm" @onclick="() => NavigateToUpdate(Employee.Id)">
                             Изменить
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteEmployee(employee.Id)">
-                            Удалить 
-                         </button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteEmployee(Employee.Id)">
+                            Удалить
+                        </button>
                     </td>
                 </tr>
-            }
         </tbody>
-    </table>
+    </ChildContentRow>
+</PaginationComponent>
+</div>
 
-}
+
 
 <br />
 <br />
-
+<br />
+<button class="btn btn-primary" @onclick="OpenAddEmployee">Add New Employee</button>
 <br />
 <br />
 <br />
-
+<br />
+<br />
 
 
 @code {
@@ -98,10 +90,12 @@ else
 
     private async Task DeleteEmployee(Guid id)
     {
-        
+        Employee employee = await EmployeeService.GetEmployee(id);
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Вы уверены, что хотите удалить пользователя '{employee.Name}' ?"))
+            return;
         await EmployeeService.DeleteEmployee(id);
         employees = await EmployeeService.GetEmployees();
-        //}
     }
+
 }
 

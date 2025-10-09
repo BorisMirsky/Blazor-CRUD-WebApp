@@ -47,7 +47,6 @@ namespace BlazorCRUDWebApp.Services
 
         public async Task UpdateEmployee(Guid id, string pos, double sal) 
         {
-
             //Employee employee = await GetEmployee(id);
             //employee.Position = pos;
             //employee.Salary = sal;
@@ -58,7 +57,6 @@ namespace BlazorCRUDWebApp.Services
                 .ExecuteUpdateAsync(s => s
                     .SetProperty(o => o.Salary, o => sal)
                     .SetProperty(o => o.Position, o => pos));
-
         }
 
 
