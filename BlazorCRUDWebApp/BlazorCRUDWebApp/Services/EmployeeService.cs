@@ -60,6 +60,22 @@ namespace BlazorCRUDWebApp.Services
         }
 
 
+        public async Task<List<Employee>> GroupEmployees(string position)
+        {
+            var employees = await _context.Employees.
+                Where(e => e.Position == position).ToListAsync();            
+            return employees;
+        }
+
+
+        public async Task<List<Employee>> OrderEmployees(double salary, string side)
+        {
+            var employees = await _context.Employees.
+                Where(e => e.Salary < salary).ToListAsync();
+            return employees;
+        }
+
+
         public async Task DeleteEmployee(Guid id)
         {
             var employeeEntity = await _context.Employees.FindAsync(id);

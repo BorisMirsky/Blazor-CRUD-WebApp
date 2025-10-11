@@ -6,12 +6,50 @@
 @inject IJSRuntime JSRuntime
 @using BlazorCRUDWebApp.Models
 @using BlazorCRUDWebApp.Services
+@using System.Diagnostics
 @inject IJSRuntime JSRuntime
 
 
 <br />
 <br />
 <h3>Все сотрудники</h3>
+<br />
+<br />
+<br />
+<div class="mb-3" style="width: 200px;">
+    <label for="inputSelect" class="form-label">Группировка сотрудников по должности</label>
+    <InputSelect 
+        class="form-control"
+        ValueExpression="@(() => employee.Position)"
+        Value="@employee.Position"
+        ValueChanged="@((string value) => GroupByPosition(value))"
+    >
+        @foreach (var pos in positions)
+        {
+            <option value="@pos" >@pos</option>
+        }
+    </InputSelect>
+</div>
+<br />
+<br />
+
+<br />
+<div class="mb-3" style="width: 200px;">
+    <label for="inputNumber" class="form-label">Сотрудники с зарплатой меньше чем</label>
+    <InputNumber 
+        class="form-control"
+        min="10000"
+        max="1000000"
+        step="1000" 
+        TValue="double"
+                 ValueExpression="@(() => employee.Salary)"
+                 Value="@employee.Salary"
+                 ValueChanged="@((double value) => GroupBySalary(value))" />
+</div>
+<br />
+<br />
+<br />
+<div><button class="btn btn-primary" @onclick="ResetSettings">Сброс настроек</button></div>
 <br />
 <br />
 <br />
@@ -70,6 +108,11 @@
 
 
 @code {
+
+    Employee employee = new();
+
+    List<string> positions = ["manager", "vender", "clerk", "Manager", "Vendor", "Clerk", "Whore"];
+
     private List<Models.Employee>? employees;
 
     protected override async Task OnInitializedAsync()
@@ -94,6 +137,25 @@
         if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Вы уверены, что хотите удалить пользователя '{employee.Name}' ?"))
             return;
         await EmployeeService.DeleteEmployee(id);
+        employees = await EmployeeService.GetEmployees();
+    }
+
+    private async Task GroupByPosition(string pos)
+    {
+        employees = await EmployeeService.GroupEmployees(pos);
+        //Navigation.NavigateTo("/allemployees");
+    }
+
+
+    private async Task GroupBySalary(double value)
+    {
+        employees = await EmployeeService.OrderEmployees(value, "less");
+        //Navigation.NavigateTo("/allemployees");
+    }
+
+    
+    private async Task ResetSettings()
+    {
         employees = await EmployeeService.GetEmployees();
     }
 
